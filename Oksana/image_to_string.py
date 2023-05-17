@@ -12,7 +12,8 @@ def image_to_string(image_path):
 
         return img_base64
 
-def encode(string):
+
+def compress(string):
     s = {x for x in string}
     sorted_list = sorted(s)
     dictionary_size = len(sorted_list)
@@ -37,7 +38,7 @@ def encode(string):
 image_path = 'flower.jpg'
 image_string = image_to_string(image_path)
 
-encode_string = encode(image_string)
+encode_string = compress(image_string)
 
 print(encode_string)
 print('Original image string length:', len(image_string))
