@@ -1,5 +1,8 @@
-from PIL import Image
 import base64
+import io
+import cv2
+from PIL import Image
+import numpy as np
 
 
 def image_to_string(image_path):
@@ -32,14 +35,53 @@ def compress(string):
             sequence = character
     if sequence:
         result_list.append(dictionary[sequence])
-    return result_list
+    return result_list, dictionary
 
 
-image_path = 'flower.jpg'
+def decompress(code, dictionary):
+    reverse_dict = {v: k for k, v in dictionary.items()}
+    message = ""
+    i = 0
+    while i < len(code):
+        if code[i] in reverse_dict:
+            message += reverse_dict[code[i]]
+            i += 1
+        else:
+            raise ValueError("Invalid code")
+    return message
+
+
+def string_to_image(base64_string):
+    imgdata = base64.b64decode(str(base64_string))
+    img = Image.frombytes("RGB", (640, 480), imgdata)
+    opencv_img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+    return opencv_img
+
+
+image_path = 'nature.jpg'
 image_string = image_to_string(image_path)
+# print(image_string)
+#
+compressed = compress(image_string)
+decompressed = decompress(compressed[0], compressed[1])
 
-encode_string = compress(image_string)
+# # print()
+#
+# print(decompressed)
+# # print(decompressed == image_string)
+compresed_string = ''
+for i in compressed[0]:
+    compresed_string += str(i)
+# # print(compresed_string)
 
-print(encode_string)
-print('Original image string length:', len(image_string))
+string_image = string_to_image(decompressed)
 
+data = Image.fromarray(string_image)
+
+# saving the final output
+# as a PNG file
+data.save('gfg_dummy_pic.png')
+
+# print('Original image string length:', len(image_string))
+# print('Compressed image string length:', len(compressed[0]))
+# print('Decompressed image string length:', len(decompressed))
