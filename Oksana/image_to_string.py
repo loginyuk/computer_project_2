@@ -8,12 +8,13 @@ import numpy as np
 def image_to_string(image_path):
     with Image.open(image_path) as img:
         # Convert image to byte array
+        width, hight = img.size
         img_to_byte = img.tobytes()
 
         # Encode byte array as base64 string
         img_base64 = base64.b64encode(img_to_byte).decode('utf-8')
 
-        return img_base64
+        return img_base64, (width, hight)
 
 
 def compress(string):
@@ -51,15 +52,15 @@ def decompress(code, dictionary):
     return message
 
 
-def string_to_image(base64_string):
+def string_to_image(base64_string, size):
     imgdata = base64.b64decode(str(base64_string))
-    img = Image.frombytes("RGB", (640, 480), imgdata)
+    img = Image.frombytes("RGB", size, imgdata)
     opencv_img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
     return opencv_img
 
 
-image_path = 'nature.jpg'
-image_string = image_to_string(image_path)
+image_path = 'flower.jpg'
+image_string, size = image_to_string(image_path)
 # print(image_string)
 #
 compressed = compress(image_string)
@@ -74,7 +75,7 @@ for i in compressed[0]:
     compresed_string += str(i)
 # # print(compresed_string)
 
-string_image = string_to_image(decompressed)
+string_image = string_to_image(decompressed, size)
 
 data = Image.fromarray(string_image)
 
