@@ -1,5 +1,13 @@
-import pydub 
 import numpy as np
+
+import pydub 
+
+from scipy.io import wavfile
+
+import soundfile as sf
+
+
+# MP3
 
 def read(f, normalized=False):
     """MP3 to numpy array"""
@@ -22,29 +30,49 @@ def write(f, sr, x, normalized=False):
     song = pydub.AudioSegment(y.tobytes(), frame_rate=sr, sample_width=2, channels=channels)
     song.export(f, format="mp3", bitrate="320k")
 
-sr, x = read("computer_project_2/Yura/audio.mp3")
-# print(x)
+
+# читання mp3 файлу
+rate, data_mp3 = read("Yura/audio.mp3")
+
+# стрінга з числами розділена крапкою
+string = '.'.join(data_mp3.flatten().astype(str))
+
+# перетворення в numpy array
+array = np.array([int(num) for num in string.split('.')]).reshape((len(data_mp3), 2)).astype(np.int16)
+
+# запис в wav файл
+write('Yura/new.mp3',rate,array)
 
 
-import wave
-import numpy as np
 
-# Open the WAV file
-with wave.open('computer_project_2/Yura/audio.wav', 'rb') as wav_file:
-    # Get audio parameters
-    sample_width = wav_file.getsampwidth()
-    sample_rate = wav_file.getframerate()
-    num_channels = wav_file.getnchannels()
-    num_frames = wav_file.getnframes()
 
-    # Read audio samples
-    audio_data = wav_file.readframes(num_frames)
 
-    # Convert the raw audio data to a numpy array of samples
-    audio_samples = np.frombuffer(audio_data, dtype=np.int16)
+# Wav
 
-# Print the first 10 audio samples
-print(audio_samples)
+# читання wav файлу
+rate, data_wav = wavfile.read('Yura/audio.wav')
 
-from scipy.io import wavfile
-wavfile.write('computer_project_2/Yura/audio.wav', sample_rate, audio_samples)
+# стрінга з числами розділена крапкою
+string = '.'.join(data_wav.flatten().astype(str))
+
+# перетворення в numpy array
+array = np.array([int(num) for num in string.split('.')]).reshape((len(data_wav), 2)).astype(np.int16)
+
+wavfile.write('Yura/new.wav',rate,array)
+
+
+
+
+
+
+
+
+# Flac
+audio_path = "Yura/sample3.flac"
+audio_data, sample_rate = sf.read(audio_path)
+
+flac = '/'.join(audio_data.flatten().astype(str))
+
+array = np.array([float(num) for num in flac.split('/')]).reshape((len(audio_data), 2)).astype(np.float32)
+
+sf.write('Yura/new.flac',array,sample_rate)
