@@ -1,20 +1,26 @@
 import base64
 import io
-import cv2
 from PIL import Image
 import numpy as np
 
+def image_to_string(image_path_: str) -> tuple:
+    """
+    Convert an image to a base64-encoded string and retrieve its size.
 
-def image_to_string(image_path):
-    with Image.open(image_path) as img:
-        # Convert image to byte array
-        width, hight = img.size
-        img_to_byte = img.tobytes()
+    Parameters:
+        image_path_ (str): The path to the image file.
 
-        # Encode byte array as base64 string
-        img_base64 = base64.b64encode(img_to_byte).decode('utf-8')
-
-        return img_base64, (width, hight)
+    Returns:
+        tuple: A tuple containing the base64-encoded image string and its size.
+    """
+    with Image.open(image_path_) as img:
+        # Encode image as base64 string
+        byte_stream = io.BytesIO()
+        # Save using the original image format
+        img.save(byte_stream, format=img.format)
+        byte_stream.seek(0)
+        img_base64 = base64.b64encode(byte_stream.read()).decode('utf-8')
+        return img_base64, img.size, img.format
 
 
 def compress(string):
@@ -22,7 +28,6 @@ def compress(string):
     sorted_list = sorted(s)
     dictionary_size = len(sorted_list)
     dictionary = {sorted_list[i]: i for i in range(dictionary_size)}
-    string = string
     result_list = []
     sequence = ""
     for character in string:
@@ -52,37 +57,36 @@ def decompress(code, dictionary):
     return message
 
 
-def string_to_image(base64_string, size):
+def string_to_image(base64_string: str, size: tuple):
+    """
+    Convert a base64-encoded string back into an image.
+
+    Parameters:
+        base64_string (str): The base64-encoded image string.
+        size (tuple): The desired size of the output image.
+
+    Returns:
+        tuple: A tuple containing the NumPy array representation of the image and its format.
+    """
     imgdata = base64.b64decode(str(base64_string))
-    img = Image.frombytes("RGB", size, imgdata)
-    opencv_img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
-    return opencv_img
+    img = Image.open(io.BytesIO(imgdata))
+    img = img.convert("RGB")  # Convert to RGB color space
+    img = img.resize(size)    # Resize the image if necessary
+    return np.array(img)
 
+if __name__ == '__main__':
+    # image_path = 'Oksana/ex1.jpeg'
+    # image_path = 'Oksana/ex2.tiff'
+    image_path = 'Oksana/ex3.png'
+    image_string, resolution, original_format = image_to_string(image_path)
 
-image_path = 'flower.jpg'
-image_string, size = image_to_string(image_path)
-# print(image_string)
-#
-compressed = compress(image_string)
-decompressed = decompress(compressed[0], compressed[1])
+    compressed = compress(image_string)
+    decompressed = decompress(compressed[0], compressed[1])
 
-# # print()
-#
-# print(decompressed)
-# # print(decompressed == image_string)
-compresed_string = ''
-for i in compressed[0]:
-    compresed_string += str(i)
-# # print(compresed_string)
+    string_image = string_to_image(decompressed, resolution)
+    data = Image.fromarray(string_image)
+    output_path = 'Oksana/final.' + original_format.lower()
 
-string_image = string_to_image(decompressed, size)
-
-data = Image.fromarray(string_image)
-
-# saving the final output
-# as a PNG file
-data.save('gfg_dummy_pic.png')
-
-# print('Original image string length:', len(image_string))
-# print('Compressed image string length:', len(compressed[0]))
-# print('Decompressed image string length:', len(decompressed))
+    # Save the image with the correct format
+    print('Saving as...', output_path)
+    data.save(output_path, format=original_format)
