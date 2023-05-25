@@ -3,7 +3,7 @@ import pydub
 from scipy.io import wavfile
 import soundfile as sf
 
-
+from algorithms import *
 
 
 def audio_string(path):
@@ -68,11 +68,12 @@ def write_mp3(f, sr, x, normalized=False):
 
 
 
-def work_with_audio(path):
+def work_with_audio(path, algorithm):
     data_from_audio = audio_string(path)
 
-    compresssed = compress(data_from_audio[0])
-    decompressed = decompress(compressed)
+
+    decompressed, statistics = algorithm(data_from_audio[0])
+
 
     audio_back(decompressed, data_from_audio[1], data_from_audio[2], data_from_audio[3], data_from_audio[4], data_from_audio[5])
 
