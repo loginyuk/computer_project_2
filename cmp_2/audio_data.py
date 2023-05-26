@@ -9,7 +9,6 @@ from algorithms import *
 def audio_string(path):
     sep = '.'
     bits = np.int16
-    path = input()
     file_format = path.split('.')[-1]
 
     if file_format == 'mp3':
@@ -70,8 +69,7 @@ def write_mp3(f, sr, x, normalized=False):
 
 def work_with_audio(path, algorithm):
     data_from_audio = audio_string(path)
-
-
+    algorithm = globals()[algorithm]
     decompressed, statistics = algorithm(data_from_audio[0])
 
 

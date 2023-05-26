@@ -1,4 +1,4 @@
-from image_to_string import work_with_image
+from image_data import work_with_image
 # from text_to_string import work_with_text
 from video_data import work_with_video
 from audio_data import work_with_audio
@@ -6,6 +6,7 @@ from audio_data import work_with_audio
 
 def compress(path, algorithm):
     #function that returns path to the compressed file
+    return path
 
     file_type = path.split('.')[-1]
     if file_type == 'txt':

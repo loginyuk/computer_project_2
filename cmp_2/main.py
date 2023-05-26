@@ -1,6 +1,7 @@
 from flask import *
 from fileinput import filename
 from compressor import compress
+import os
 
 compressor = Flask(__name__)
 
@@ -20,8 +21,22 @@ def submit():
     if request.method == 'POST':  
         f = request.files['file']
         alg = list(request.form.values())
-        f.save(f.filename)
-        path = compress(f.filename, alg[0])
+
+
+        output_folder = 'files'
+        for filename in os.listdir(output_folder):
+            file_path = os.path.join(output_folder, filename)
+            # Check if the file is a regular file (not a directory)
+            if os.path.isfile(file_path):
+                # Remove the file
+                os.remove(file_path)
+        os.rmdir(output_folder)
+        os.makedirs(output_folder)
+    
+
+        a = 'files/' + f.filename
+        f.save(a)
+        path = compress(a, alg[0])
         return render_template('download.html', options=options_list)
 
 @compressor.route('/download')

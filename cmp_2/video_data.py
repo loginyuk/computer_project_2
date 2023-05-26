@@ -2,6 +2,7 @@ import numpy as np
 from moviepy.editor import VideoFileClip, AudioFileClip, concatenate
 import os
 from PIL import Image
+from algorithms import *
 
 from image_data import work_with_image
 from audio_data import work_with_audio
@@ -58,13 +59,13 @@ def video_back(fps, video_clip, audio_clip):
 
 def work_with_video(path, algorithm):
     data_from_video = video_to_string(path)
+    algorithm = globals()[algorithm]
     work_with_audio(data_from_video[0], algorithm)
     for i in range(len(os.listdir(data_from_video[1]))):
         work_with_image(f'frames/frame_{i}.jpg')
 
 
     video_back(data_from_video[2], data_from_video[3], data_from_video[4])
-
 
 
 

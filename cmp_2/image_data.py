@@ -77,7 +77,8 @@ def string_to_image(base64_string: str, size: tuple):
 
 def work_with_image(image_path, algorithm):
     image_string, resolution, original_format = image_to_string(image_path)
-
+    algorithm = globals()[algorithm]
+    
     decompressed, statistics = algorithm(image_string)
 
 
