@@ -2,6 +2,7 @@ import base64
 import io
 from PIL import Image
 import numpy as np
+from algorithms import work_with_algo
 
 def image_to_string(image_path_: str) -> tuple:
     """
@@ -77,18 +78,20 @@ def string_to_image(base64_string: str, size: tuple):
 
 def work_with_image(image_path, algorithm):
     image_string, resolution, original_format = image_to_string(image_path)
-    algorithm = globals()[algorithm]
-    
-    decompressed, statistics = algorithm(image_string)
+
+    decompressed, statistics = work_with_algo(algorithm, image_string)
+
 
 
     string_image = string_to_image(decompressed, resolution)
     data = Image.fromarray(string_image)
-    output_path = image_path + original_format.lower()
+    output_path = image_path.split('.')[1]
 
     # Save the image with the correct format
     print('Saving as...', output_path)
     data.save(output_path, format=original_format)
+
+    return statistics
 
 
 

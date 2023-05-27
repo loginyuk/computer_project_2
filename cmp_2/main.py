@@ -6,8 +6,8 @@ import os
 compressor = Flask(__name__)
 
 path = ''
-options_list= [{'algorithm' : 'LZW'}, {'algorithm' : 'LZ77'}, {'algorithm' : 'LZ78'}, \
-         {'algorithm' : 'Deflate'}, {'algorithm' : 'Fifth algorithm'}]
+options_list= [{'algorithm' : 'LZW'}, {'algorithm' : 'LZ77'}, {'algorithm' : 'Huffman'}, \
+         {'algorithm' : 'Deflate'}, {'algorithm' : 'LZSS'}]
 
 @compressor.route('/')
 def main():
@@ -36,7 +36,8 @@ def submit():
 
         a = 'files/' + f.filename
         f.save(a)
-        path = compress(a, alg[0])
+        path, statistics = compress(a, alg[0])
+        # if len(statistics) == 2 то це відео(1 аудіо, 2 фотки)
         return render_template('download.html', options=options_list)
 
 @compressor.route('/download')

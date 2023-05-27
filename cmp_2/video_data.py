@@ -2,6 +2,7 @@ import numpy as np
 from moviepy.editor import VideoFileClip, AudioFileClip, concatenate
 import os
 from PIL import Image
+import shutil
 from algorithms import *
 
 from image_data import work_with_image
@@ -15,14 +16,16 @@ def video_to_string(video_file: str) -> str:
     fps = video_clip.fps
 
     audio = video_clip.audio
-    audio.write_audiofile('video_audio.mp3')
-    audio_file = 'video_audio.mp3'  # Path to the audio file
+    audio.write_audiofile('files/video_audio.mp3')
+    audio_file = 'files/video_audio.mp3'  # Path to the audio file
     audio_clip = AudioFileClip(audio_file)              
 
     frame_rate = 30  # Sample every 10 frames
 
     # чистить папку і створює нову
-    output_folder = 'frames'
+    output_folder = 'files/frames'
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
     for filename in os.listdir(output_folder):
         file_path = os.path.join(output_folder, filename)
         # Check if the file is a regular file (not a directory)
@@ -38,7 +41,7 @@ def video_to_string(video_file: str) -> str:
     for frame_number, frame in enumerate(video_clip.iter_frames()):
         if frame_number % int(fps) == 0:
             sampling_data.append(frame)
-    print(len(sampling_data))
+
 
 
     # записує фото в папку
@@ -49,23 +52,35 @@ def video_to_string(video_file: str) -> str:
 
     return audio_file, output_folder, fps, video_clip, audio_clip
 
-def video_back(fps, video_clip, audio_clip):
+def video_back(fps, video_clip, audio_clip, path):
     video_clip = concatenate([video_clip.resize((video_clip.size[0], video_clip.size[1])).loop(duration=audio_clip.duration)])
     video_clip = video_clip.set_audio(audio_clip)
-    output_file = 'new_video.mp4'
-    video_clip.write_videofile(output_file, codec='libx264', audio_codec='aac', fps=fps)
+    # path = os.path.abspath(path)
+    new_path = 'video.mp4'
+    # shutil.move(path, '/Users/loginuha/op/discrete/computer_project_2/cmp_2'+path.split('/')[-1])
+    video_clip.write_videofile(new_path, codec='libx264', audio_codec='aac', fps=fps)
+    os.rename(new_path, path)
 
 
 
 def work_with_video(path, algorithm):
     data_from_video = video_to_string(path)
-    algorithm = globals()[algorithm]
-    work_with_audio(data_from_video[0], algorithm)
+    statistics_audio = work_with_audio(data_from_video[0], algorithm)
     for i in range(len(os.listdir(data_from_video[1]))):
-        work_with_image(f'frames/frame_{i}.jpg')
+        statistics_frames = work_with_image(f'files/frames/frame_{i}.jpg', algorithm)
 
-
-    video_back(data_from_video[2], data_from_video[3], data_from_video[4])
+    video_back(data_from_video[2], data_from_video[3], data_from_video[4], path)
+    output_folder = 'files/frames'
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+    for filename in os.listdir(output_folder):
+        file_path = os.path.join(output_folder, filename)
+        # Check if the file is a regular file (not a directory)
+        if os.path.isfile(file_path):
+            # Remove the file
+            os.remove(file_path)
+    os.rmdir(output_folder)
+    return [statistics_audio, statistics_frames]
 
 
 

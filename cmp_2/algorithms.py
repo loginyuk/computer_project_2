@@ -53,6 +53,12 @@ def lzss_handler(data):
     assert decompressed == data
     return decompressed, statistics
 
-if __name__ == '__main__':
-    a = deflate_handler('ewfgawygef')
-    print(a)
+def work_with_algo(algorithm, data):
+    algorithm = algorithm.lower() + '_handler'
+    algorithm = globals()[algorithm]
+    decompressed, statistics = algorithm(data)
+    return decompressed, statistics
+
+# if __name__ == '__main__':
+    # a = deflate_handler('ewfgawygef')
+    # print(a)

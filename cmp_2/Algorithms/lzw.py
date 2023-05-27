@@ -49,8 +49,8 @@ class LZW:
             text = entry
         return result.getvalue()
 
-if __name__ == '__main__':
-    compress = LZW('TOBEORNOTTOBEORTOBEORNOT').encode()
-    print(compress)
-    decompress = LZW(compress).decode()
-    print(decompress)
+# if __name__ == '__main__':
+#     compress = LZW('TOBEORNOTTOBEORTOBEORNOT').encode()
+#     print(compress)
+#     decompress = LZW(compress).decode()
+#     print(decompress)

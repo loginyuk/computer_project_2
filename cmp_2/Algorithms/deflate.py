@@ -1,6 +1,6 @@
 """Deflate algorithm"""
-from lz77 import LZ77
-from huffman import HuffmanTree
+# from lz77 import LZ77
+# from huffman import HuffmanTree
 
 class Deflate:
     """Class for Deflate algorithm"""

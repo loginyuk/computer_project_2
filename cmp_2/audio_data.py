@@ -5,7 +5,7 @@ import pydub
 from scipy.io import wavfile
 import soundfile as sf
 
-from algorithms import *
+from algorithms import work_with_algo
 
 
 def audio_string(path):
@@ -26,19 +26,19 @@ def audio_string(path):
 
     string = sep.join(data.flatten().astype(str))
 
-    return string, rate, len(data), sep, bits, file_format
+    return string, rate, len(data), sep, bits, file_format, path
 
 
 
-def audio_back(decompressed, rate, lend, sep, bits, file_format):
+def audio_back(decompressed, rate, lend, sep, bits, file_format, path):
     np_array = np.array([int(num) for num in decompressed.split(sep)]).reshape((lend, 2)).astype(bits)
     
     if file_format == 'mp3':
-        write_mp3('Yura/new.mp3',rate,np_array)
+        write_mp3(path,rate,np_array)
     elif file_format == 'wav':
-        wavfile.write('Yura/new.wav',rate,np_array)
+        wavfile.write(path, rate,np_array)
     elif file_format == 'flac':
-        sf.write('Yura/new.flac',np_array,rate)
+        sf.write(path, np_array,rate)
 
 
 
@@ -71,11 +71,14 @@ def write_mp3(f, sr, x, normalized=False):
 
 def work_with_audio(path, algorithm):
     data_from_audio = audio_string(path)
-    algorithm = globals()[algorithm]
-    decompressed, statistics = algorithm(data_from_audio[0])
+
+    decompressed, statistics = work_with_algo(algorithm, data_from_audio[0])
+
+    
 
 
-    audio_back(decompressed, data_from_audio[1], data_from_audio[2], data_from_audio[3], data_from_audio[4], data_from_audio[5])
+    audio_back(decompressed, data_from_audio[1], data_from_audio[2], data_from_audio[3], data_from_audio[4], data_from_audio[5], data_from_audio[6])
+    return statistics
 
 
 
