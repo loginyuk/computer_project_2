@@ -9,6 +9,7 @@ using to the required algorithm
 from image_data import work_with_image
 from video_data import work_with_video
 from audio_data import work_with_audio
+from txt_data import work_with_txt
 
 def compress(path: str, algorithm: str):
     """
@@ -21,21 +22,8 @@ def compress(path: str, algorithm: str):
     file_type = path.split('.')[-1]
 
     # TEXT
-    if file_type in ['txt']:
-        ...
-        # string = ''
-        # #Read data from a file
-        # with open(path, encoding="UTF-8") as file:
-        #     data = file.read()
-        #     data = '/'.join(data.split('\n'))
-        # algorithm = globals()[algorithm]
-        # decompressed, statistics = algorithm(data)
-        # assert decompressed == data
-        # with open(path, 'w', encoding='UTF-8') as file:
-        #     decompressed = decompressed.split('/')
-        #     for element in decompressed:
-        #         string += element + '\n'
-        #     file.write(string)
+    if file_type == 'txt':
+        statistics = work_with_txt(path, algorithm)
     # PICTURE
     elif file_type in ['jpg', 'png', 'jpeg']:
         statistics = work_with_image(path, algorithm)

@@ -31,7 +31,7 @@ def audio_string(path):
 
 
 def audio_back(decompressed, rate, lend, sep, bits, file_format, path):
-    np_array = np.array([int(num) for num in decompressed.split(sep)]).reshape((lend, 2)).astype(bits)
+    np_array = np.array([int(float(num)) for num in decompressed.split(sep)]).reshape((lend, 2)).astype(bits)
     
     if file_format == 'mp3':
         write_mp3(path,rate,np_array)
