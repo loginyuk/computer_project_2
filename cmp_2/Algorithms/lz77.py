@@ -1,4 +1,5 @@
 """LZ77 algorithm"""
+
 class LZ77:
     """class for LZ77 algorithm"""
     def __init__(self, data) -> None:
@@ -69,10 +70,3 @@ class LZ77:
         tuples = int(self.data.count('|') / 2)
         bits = (8 + 2 * (len(bin(self.buffer_length).split('b')[1]))) * tuples
         return int(bits / 8)
-
-
-lz = LZ77(255, 'adghjgvgvm')
-encoded = lz.compress()
-print(encoded)
-decoded = lz.decompress()
-print(decoded)

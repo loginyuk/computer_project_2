@@ -80,10 +80,3 @@ class HuffmanTree:
                 decoded_data += self.decode_text[current_code]
                 current_code = ''
         return decoded_data
-
-# data = 'aabbbcdddddeeeeee'
-# huffman_tree = HuffmanTree(data)
-# encoded_data = huffman_tree.encode(data)
-# print(encoded_data)
-# decoded_data = huffman_tree.decode(encoded_data)
-# print(decoded_data)

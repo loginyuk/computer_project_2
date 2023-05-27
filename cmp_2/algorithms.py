@@ -7,8 +7,9 @@ from Algorithms.lzw import LZW
 from Algorithms.lz77 import LZ77
 from Algorithms.huffman import HuffmanTree
 from Algorithms.deflate import Deflate
+from Algorithms.LZSS import LZSS
 
-def LZW(data):
+def lzw_handler(data):
     """o"""
     statistics = []
     compressed = LZW(data).encode()
@@ -16,29 +17,42 @@ def LZW(data):
     assert decompressed == data
     return decompressed, statistics
 
-def LZ77(data):
+def lz77_handler(data):
     """o"""
     statistics = []
-    lz = LZ77(data)
-    compressed = lz.compress()
-    decompressed = lz.decompress()
+    lz77 = LZ77(data)
+    compressed = lz77.compress()
+    decompressed = lz77.decompress()
     assert decompressed == data
     return decompressed, statistics
 
-def Huffman(data):
+def huffman_handler(data):
     """o"""
     statistics = []
     huffman = HuffmanTree(data)
-    compressed = huffman_tree.encode(data)
-    decompressed = huffman_tree.decode(compressed)
+    compressed = huffman.encode(data)
+    decompressed = huffman.decode(compressed)
     assert decompressed == data
     return decompressed, statistics
 
-def Deflate(data):
+def deflate_handler(data):
     """o"""
-    ...
+    statistics = []
+    deflate = Deflate()
+    compressed = deflate.encode(data)
+    decompressed = deflate.decode(compressed)
+    assert decompressed == data
+    return decompressed, statistics
 
-def Fifth_algorithm(data):
+def lzss_handler(data):
     """o"""
-    ...
+    statistics = []
+    lzss = LZSS()
+    compressed = lzss.compress(data)
+    decompressed = lzss.decompress(compressed)
+    assert decompressed == data
+    return decompressed, statistics
 
+if __name__ == '__main__':
+    a = deflate_handler('ewfgawygef')
+    print(a)

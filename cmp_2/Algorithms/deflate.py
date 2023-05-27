@@ -3,41 +3,25 @@ from lz77 import LZ77
 from huffman import HuffmanTree
 
 class Deflate:
-    """class for Deflate algorithm"""
+    """Class for Deflate algorithm"""
     def __init__(self, data):
         self.data = data
-        self.lz = LZ77()
-        self.huf = HuffmanTree()
+        self.lz77 = LZ77(data)
+        self.huf = HuffmanTree(data)
 
-    def read(self, file_path):
-        """
-        Read data from a file.
-        """
-        with open(file_path, encoding="UTF-8") as file:
-            self.data = file.read()
-
-    def write(self, data, file_path):
-        """
-        Write data into a file.
-        """
-        with open(file_path,'w', encoding="UTF-8") as file:
-            file.write(data)
-
-    def encode(self, file_path):
+    def encode(self):
         """
         Encode the data.
         """
-        self.lz.compress(file_path)
-        self.huf.encode(f'{file_path.split(".")[0]}_compressed.txt')
-        self.write(self.huf.coded, f'{file_path.split(".")[0]}_compressed_deflated.txt')
+        compressed_data = self.lz77.compress()
+        encoded_data = self.huf.encode(compressed_data)
+        return encoded_data
 
-    def decode(self, file_path_in, file_path_out):
+    def decode(self, encoded_data):
         """
         Decode the data.
         """
-        data = self.read(file_path_in)
-        self.huf.decoded = data
-        self.huf.decode(file_path_in)
-        self.lz.decompressed = self.read(f'{file_path_in.split(".")[0]}_decompressed.txt')
-        self.lz.decode(file_path_out)
-
+        decoded_data = self.huf.decode(encoded_data)
+        self.lz77.data = decoded_data
+        decompressed_data = self.lz77.decompress()
+        return decompressed_data
