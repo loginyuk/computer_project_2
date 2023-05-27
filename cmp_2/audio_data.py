@@ -1,5 +1,7 @@
+"""handle audio"""
+
 import numpy as np
-import pydub 
+import pydub
 from scipy.io import wavfile
 import soundfile as sf
 
