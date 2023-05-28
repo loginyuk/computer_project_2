@@ -1,19 +1,19 @@
 """Deflate algorithm"""
-# from lz77 import LZ77
-# from huffman import HuffmanTree
+from lz77 import LZ77
+from huffman import HuffmanTree
 
 class Deflate:
     """Class for Deflate algorithm"""
     def __init__(self, data):
         self.data = data
-        self.lz77 = LZ77(data)
+        self.lz77 = LZ77()
         self.huf = HuffmanTree(data)
 
     def encode(self):
         """
         Encode the data.
         """
-        compressed_data = self.lz77.compress()
+        compressed_data = self.lz77.encode(self.data)
         encoded_data = self.huf.encode(compressed_data)
         return encoded_data
 
@@ -23,5 +23,5 @@ class Deflate:
         """
         decoded_data = self.huf.decode(encoded_data)
         self.lz77.data = decoded_data
-        decompressed_data = self.lz77.decompress()
+        decompressed_data = self.lz77.decode(encoded_data)
         return decompressed_data
