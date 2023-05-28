@@ -5,35 +5,31 @@ using the required algo, determines the effectiveness and time
 
 from Algorithms.lzw import LZW
 from Algorithms.lz77 import LZ77
-from Algorithms.huffman import HuffmanTree
+from Algorithms.huffman import HuffmanTree, huffman_statistic
 from Algorithms.deflate import Deflate
 from Algorithms.LZSS import LZSS
+from Algorithms.compression_statistics import get_compression_statistics
 
 def lzw_handler(data):
     """o"""
-    statistics = []
-    compressed = LZW(data).encode()
-    decompressed = LZW(compressed).decode()
-    assert decompressed == data
-    return decompressed, statistics
+    # statistics = [compression_ratio, compress_time, decompress_time]
+    statistics, decompressed_data = get_compression_statistics(LZW(), data)
+    assert decompressed_data == data
+    return decompressed_data, statistics
 
 def lz77_handler(data):
     """o"""
-    statistics = []
-    lz77 = LZ77(data)
-    compressed = lz77.compress()
-    decompressed = lz77.decompress()
-    assert decompressed == data
-    return decompressed, statistics
+    # statistics = [compression_ratio, compress_time, decompress_time]
+    statistics, decompressed_data = get_compression_statistics(LZ77(), data)
+    assert decompressed_data == data
+    return decompressed_data, statistics
 
 def huffman_handler(data):
     """o"""
-    statistics = []
-    huffman = HuffmanTree(data)
-    compressed = huffman.encode(data)
-    decompressed = huffman.decode(compressed)
-    assert decompressed == data
-    return decompressed, statistics
+    # statistics = [compression_ratio, compress_time, decompress_time]
+    statistics, decompressed_data = huffman_statistic(data)
+    assert decompressed_data == data
+    return decompressed_data, statistics
 
 def deflate_handler(data):
     """o"""
@@ -46,12 +42,10 @@ def deflate_handler(data):
 
 def lzss_handler(data):
     """o"""
-    statistics = []
-    lzss = LZSS()
-    compressed = lzss.compress(data)
-    decompressed = lzss.decompress(compressed)
-    assert decompressed == data
-    return decompressed, statistics
+    # statistics = [compression_ratio, compress_time, decompress_time]
+    statistics, decompressed_data = get_compression_statistics(LZSS(), data)
+    assert decompressed_data == data
+    return decompressed_data, statistics
 
 def work_with_algo(algorithm, data):
     algorithm = algorithm.lower() + '_handler'
