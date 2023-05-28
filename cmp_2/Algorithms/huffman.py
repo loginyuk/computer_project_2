@@ -63,6 +63,7 @@ class HuffmanTree:
         """
         Encode the given data using the Huffman tree.
         """
+        self.build_tree(data)
         encoded_data = ''
         for character in data:
             encoded_data += self.encode_text[character]
@@ -80,3 +81,55 @@ class HuffmanTree:
                 decoded_data += self.decode_text[current_code]
                 current_code = ''
         return decoded_data
+
+# data = 'aabbbcdddddeeeeee'
+# huffman_tree = HuffmanTree(data)
+# encoded_data = huffman_tree.encode(data)
+# print(encoded_data)
+# decoded_data = huffman_tree.decode(encoded_data)
+# print(decoded_data)
+
+def huffman_statistic(data):
+    """
+    Розраховує відсоток стиснення тексту, час стиснення та розтиснення
+    для гафмана
+    """
+    import time
+    def compression_ratio(original_data, encoded_data):
+        """
+        Calculate the compression ratio of the encoded data compared to the original data.
+        """
+        original_size = len(original_data) * 8  # Assuming 8 bits per character
+        encoded_size = len(encoded_data)
+        ratio = (encoded_size / original_size) * 100
+        return ratio
+
+    def compression_time(data):
+        """
+        Measure the time taken to encode the given data using the Huffman tree.
+        """
+        start_time = time.time()
+        huffman_tree = HuffmanTree(data)
+        encoded_data = huffman_tree.encode(data)
+        end_time = time.time()
+        return end_time - start_time, encoded_data
+
+    def decompression_time(encoded_data):
+        """
+        Measure the time taken to decode the given encoded data using the Huffman tree.
+        """
+        start_time = time.time()
+        huffman_tree = HuffmanTree(encoded_data)
+        decoded_data = huffman_tree.decode(encoded_data)
+        end_time = time.time()
+        return end_time - start_time, decoded_data
+    compression_time, encoded_data = compression_time(data)
+    compression_ratio = compression_ratio(data, encoded_data)
+    decompression_time, decoded_data = decompression_time(encoded_data)
+    return compression_ratio, compression_time, decompression_time, decoded_data
+
+# data = 'aabbbcdddddeeeeee'
+# compression_ratio, compression_time, decompression_time, decoded_data = huffman_statistic(data)
+# print(f"Compression ratio: {compression_ratio}%")
+# print(f"Compression time: {compression_time} seconds")
+# print(f"Decompression time: {decompression_time} seconds")
