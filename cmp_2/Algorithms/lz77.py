@@ -1,14 +1,12 @@
 """LZ77 algorithm"""
-
 class LZ77:
     """class for LZ77 algorithm"""
-    def __init__(self, data) -> None:
+    def __init__(self) -> None:
         """
         Init a lz77 class with a buffer length.
         Default set to 255.
         """
         self.buffer_length = 255
-        self.data = data
 
     def find_substring(self, buffer, data):
         """
@@ -28,29 +26,29 @@ class LZ77:
         next = data[length]
         return (length, (offset, length, next))
 
-    def compress(self):
+    def encode(self, data):
         """
         Compress the data.
         """
         ans = []
         buffer = ""
-        while self.data:
-            length, code = self.find_substring(buffer, self.data)
-            buffer += self.data[:length + 1]
+        while data:
+            length, code = self.find_substring(buffer, data)
+            buffer += data[:length + 1]
             if len(buffer) > self.buffer_length:
                 buffer = buffer[len(buffer) - self.buffer_length:]
-            self.data = self.data[length + 1:]
+            data = data[length + 1:]
             ans.append(code)
-        self.data = ans
+        data = ans
         return ans
 
-    def decompress(self):
+    def decode(self, data):
         """
         Decompress the data.
         """
         buffer = ""
         ans = ""
-        for (offset, length, next) in self.data:
+        for (offset, length, next) in data:
             if next == None:
                 ans += buffer[len(buffer) - offset:len(buffer) - offset + length]
                 break
@@ -59,14 +57,10 @@ class LZ77:
             buffer += added
             if len(buffer) > self.buffer_length:
                 buffer = buffer[len(buffer) - self.buffer_length:]
-        self.data = ans
         return ans
 
-
-    def calculate_compression(self):
-        """
-        Calculate compression.
-        """
-        tuples = int(self.data.count('|') / 2)
-        bits = (8 + 2 * (len(bin(self.buffer_length).split('b')[1]))) * tuples
-        return int(bits / 8)
+# lz = LZ77()
+# encoded = lz.encode('adghjgvgvm')
+# print(encoded)
+# decoded = lz.decode(encoded)
+# print(decoded)
