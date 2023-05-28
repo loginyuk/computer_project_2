@@ -13,6 +13,7 @@ from Algorithms.compression_statistics import get_compression_statistics
 def lzw_handler(data):
     """o"""
     # statistics = [compression_ratio, compress_time, decompress_time]
+    #              відсоток стиснення, час стиснення, час розтиснення.
     statistics, decompressed_data = get_compression_statistics(LZW(), data)
     assert decompressed_data == data
     return decompressed_data, statistics
