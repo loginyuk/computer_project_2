@@ -32,17 +32,17 @@ def get_compression_statistics(algorithm_compress, original_data):
 
     compression_ratio = (compressed_size / original_size) * 100
 
-    return compression_ratio, compress_time, decompress_time
-import time
+    return compression_ratio, compress_time, decompress_time, decompressed_data
 
 
 
-with open('text.txt', 'r', encoding="utf-8") as file:
-    data = file.read()
-# Приклад використання
-data = "aaasdasd asdasdasdasd asd"
-compression_ratio, compress_time, decompress_time = get_compression_statistics(LZ77(), data)
+# with open('text.txt', 'r', encoding="utf-8") as file:
+#     data = file.read()
 
-print("Compression ratio:\t{:.2f}%".format(compression_ratio))
-print("Compression time:\t{:.6f} seconds".format(compress_time))
-print("Decompression time:\t{:.6f} seconds".format(decompress_time))
+# # Приклад використання
+# data = "aaasdasd asdasdasdasd asd"
+# compression_ratio, compress_time, decompress_time, decompressed_data = get_compression_statistics(LZ77(), data)
+
+# print("Compression ratio:\t{:.2f}%".format(compression_ratio))
+# print("Compression time:\t{:.6f} seconds".format(compress_time))
+# print("Decompression time:\t{:.6f} seconds".format(decompress_time))
