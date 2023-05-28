@@ -3,17 +3,14 @@ from io import StringIO
 
 class LZW:
     """class for LZW algorithm"""
-    def __init__(self, uncompressed) -> None:
-        self.uncompressed = uncompressed
-
-    def encode(self):
+    def encode(self, uncompressed):
         """Compress a string to a list of output symbols."""
         dict_size = 256
         dictionary = dict((chr(element), element) for element in range(dict_size))
 
         text = ""
         result = []
-        for elem in self.uncompressed:
+        for elem in uncompressed:
             res = text + elem
             if res in dictionary:
                 text = res
@@ -27,15 +24,15 @@ class LZW:
             result.append(dictionary[text])
         return result
 
-    def decode(self):
+    def decode(self, uncompressed):
         """Decompress a list of output ks to a string."""
         dict_size = 256
         dictionary = dict((element, chr(element)) for element in range(dict_size))
 
         result = StringIO()
-        text = chr(self.uncompressed.pop(0))
+        text = chr(uncompressed.pop(0))
         result.write(text)
-        for lem in self.uncompressed:
+        for lem in uncompressed:
             if lem in dictionary:
                 entry = dictionary[lem]
             elif lem == dict_size:
@@ -50,7 +47,7 @@ class LZW:
         return result.getvalue()
 
 # if __name__ == '__main__':
-#     compress = LZW('TOBEORNOTTOBEORTOBEORNOT').encode()
+#     compress = LZW().encode('TOBEORNOTTOBEORTOBEORNOT')
 #     print(compress)
-#     decompress = LZW(compress).decode()
+#     decompress = LZW().decode(compress)
 #     print(decompress)
