@@ -32,7 +32,7 @@ def get_compression_statistics(algorithm_compress, original_data):
 
     compression_ratio = (compressed_size / original_size) * 100
 
-    return compression_ratio, compress_time, decompress_time, decompressed_data
+    return [compression_ratio, compress_time, decompress_time], decompressed_data
 
 
 
