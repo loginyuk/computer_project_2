@@ -1,0 +1,7 @@
+numpy
+pydub
+scipy
+soundfile
+Pillow
+flask
+moviepy
