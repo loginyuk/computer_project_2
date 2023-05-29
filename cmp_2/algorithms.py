@@ -5,7 +5,7 @@ using the required algo, determines the effectiveness and time
 
 from Algorithms.lzw import LZW
 from Algorithms.lz77 import LZ77
-from Algorithms.huffman import HuffmanTree, huffman_statistic
+from Algorithms.huffman import huffman_statistic
 from Algorithms.deflate import Deflate
 from Algorithms.LZSS import LZSS
 from Algorithms.compression_statistics import get_compression_statistics
@@ -35,9 +35,10 @@ def huffman_handler(data):
 def deflate_handler(data):
     """o"""
     statistics = []
-    deflate = Deflate()
-    compressed = deflate.encode(data)
-    decompressed = deflate.decode(compressed)
+    # deflate = Deflate()
+    # compressed = deflate.encode(data)
+    # decompressed = deflate.decode(compressed)
+    statistics, decompressed = get_compression_statistics(Deflate(), data)
     assert decompressed == data
     return decompressed, statistics
 

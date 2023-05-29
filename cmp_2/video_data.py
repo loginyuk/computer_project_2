@@ -66,8 +66,9 @@ def video_back(fps, video_clip, audio_clip, path):
 def work_with_video(path, algorithm):
     data_from_video = video_to_string(path)
     statistics_audio = work_with_audio(data_from_video[0], algorithm)
+    statistics_frames = []
     for i in range(len(os.listdir(data_from_video[1]))):
-        statistics_frames = work_with_image(f'files/frames/frame_{i}.jpg', algorithm)
+        statistics_frames += work_with_image(f'files/frames/frame_{i}.jpg', algorithm)
 
     video_back(data_from_video[2], data_from_video[3], data_from_video[4], path)
     output_folder = 'files/frames'

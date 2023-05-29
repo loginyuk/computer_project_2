@@ -85,11 +85,8 @@ def work_with_image(image_path, algorithm):
 
     string_image = string_to_image(decompressed, resolution)
     data = Image.fromarray(string_image)
-    output_path = image_path.split('.')[1]
 
-    # Save the image with the correct format
-    print('Saving as...', output_path)
-    data.save(output_path, format=original_format)
+    data.save(image_path, format=original_format)
 
     return statistics
 

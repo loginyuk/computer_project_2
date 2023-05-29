@@ -1,9 +1,9 @@
 """test algo-s"""
 import time
-from LZSS import LZSS
-from lzw import LZW
-from lz77 import LZ77
-from lzcompres import LZCompression
+# from Algorithms.LZSS import LZSS
+# from Algorithms.lzw import LZW
+# from Algorithms.lz77 import LZ77
+# from lzcompres import LZCompression
 
 def get_compression_statistics(algorithm_compress, original_data):
     """
@@ -20,7 +20,7 @@ def get_compression_statistics(algorithm_compress, original_data):
     compressed_data = algorithm_compress.encode(original_data)
     end_compress_time = time.time()
     compress_time = end_compress_time - start_compress_time
-    print(compressed_data)
+    # print(compressed_data)
     start_decompress_time = time.time()
     decompressed_data = algorithm_compress.decode(compressed_data)
     end_decompress_time = time.time()

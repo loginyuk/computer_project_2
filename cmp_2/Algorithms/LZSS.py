@@ -15,7 +15,7 @@ class LZSS:
         self.window_size = window_size
         self.lookahead_buffer_size = lookahead_buffer_size
 
-    def compress(self, data):
+    def encode(self, data):
         """
         Стискає вхідні дані за допомогою алгоритму LZSS.
 
@@ -72,7 +72,7 @@ class LZSS:
 
         return best_length, best_offset
 
-    def decompress(self, compressed_data):
+    def decode(self, compressed_data):
         """
         Розкодовує стиснуті дані, відновлюючи вихідний рядок.
 

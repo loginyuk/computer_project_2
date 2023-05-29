@@ -66,19 +66,19 @@ class HuffmanTree:
         # self.build_tree(data)
         encoded_data = ''
         for character in data:
-            encoded_data += self.encode_text[character]
-        return encoded_data
+            encoded_data += self.encode_text[character]+'.'
+        return encoded_data[:-1]
 
     def decode(self, data):
         """
         Decode the given data using the Huffman tree.
         """
-        decoded_data = ''
+        decoded_data = []
         current_code = ''
-        for bit in data:
+        for bit in data.split('.'):
             current_code += bit
             if current_code in self.decode_text:
-                decoded_data += self.decode_text[current_code]
+                decoded_data.append(self.decode_text[current_code])
                 current_code = ''
         return decoded_data
 
