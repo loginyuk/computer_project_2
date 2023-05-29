@@ -63,7 +63,6 @@ class HuffmanTree:
         """
         Encode the given data using the Huffman tree.
         """
-        # self.build_tree(data)
         encoded_data = ''
         for character in data:
             encoded_data += self.encode_text[character]+'.'
@@ -82,12 +81,6 @@ class HuffmanTree:
                 current_code = ''
         return decoded_data
 
-# data = 'aabbbcdddddeeeeee'
-# huffman_tree = HuffmanTree(data)
-# encoded_data = huffman_tree.encode(data)
-# print(encoded_data)
-# decoded_data = huffman_tree.decode(encoded_data)
-# print(decoded_data)
 
 def huffman_statistic(data):
     """
@@ -119,7 +112,6 @@ def huffman_statistic(data):
         Measure the time taken to decode the given encoded data using the Huffman tree.
         """
         start_time = time.time()
-        # huffman_tree = HuffmanTree(encoded_data)
         decoded_data = huffman_tree.decode(encoded_data)
         end_time = time.time()
         return end_time - start_time, decoded_data
@@ -127,9 +119,3 @@ def huffman_statistic(data):
     compression_ratio = compression_ratio(data, encoded_data)
     decompression_time, decoded_data = decompression_time(encoded_data, huffman_tree)
     return [compression_ratio, compression_time, decompression_time], decoded_data
-
-# data = 'aabbbcdddddeeeeee'
-# compression_ratio, compression_time, decompression_time, decoded_data = huffman_statistic(data)
-# print(f"Compression ratio: {compression_ratio}%")
-# print(f"Compression time: {compression_time} seconds")
-# print(f"Decompression time: {decompression_time} seconds")

@@ -11,40 +11,43 @@ from Algorithms.LZSS import LZSS
 from Algorithms.compression_statistics import get_compression_statistics
 
 def lzw_handler(data):
-    """o"""
-    # statistics = [compression_ratio, compress_time, decompress_time]
-    #              відсоток стиснення, час стиснення, час розтиснення.
+    """
+    LZW algorithm handler
+    """
+    #compression ratio, compress time, decompress time
     statistics, decompressed_data = get_compression_statistics(LZW(), data)
     assert decompressed_data == data
     return decompressed_data, statistics
 
 def lz77_handler(data):
-    """o"""
-    # statistics = [compression_ratio, compress_time, decompress_time]
+    """
+    LZ77 algorithm handler
+    """
     statistics, decompressed_data = get_compression_statistics(LZ77(), data)
     assert decompressed_data == data
     return decompressed_data, statistics
 
 def huffman_handler(data):
-    """o"""
-    # statistics = [compression_ratio, compress_time, decompress_time]
+    """
+    Huffman algorithm handler
+    """
     statistics, decompressed_data = huffman_statistic(data)
     assert decompressed_data == data
     return decompressed_data, statistics
 
 def deflate_handler(data):
-    """o"""
+    """
+    Deflate algorithm handler
+    """
     statistics = []
-    # deflate = Deflate()
-    # compressed = deflate.encode(data)
-    # decompressed = deflate.decode(compressed)
     statistics, decompressed = get_compression_statistics(Deflate(), data)
     assert decompressed == data
     return decompressed, statistics
 
 def lzss_handler(data):
-    """o"""
-    # statistics = [compression_ratio, compress_time, decompress_time]
+    """
+    LZSS algorithm handler
+    """
     statistics, decompressed_data = get_compression_statistics(LZSS(), data)
     assert decompressed_data == data
     return decompressed_data, statistics
@@ -54,7 +57,3 @@ def work_with_algo(algorithm, data):
     algorithm = globals()[algorithm]
     decompressed, statistics = algorithm(data)
     return decompressed, statistics
-
-# if __name__ == '__main__':
-    # a = deflate_handler('ewfgawygef')
-    # print(a)

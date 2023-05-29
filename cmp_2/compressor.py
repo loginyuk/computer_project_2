@@ -5,7 +5,6 @@ compressing and decompressing of the file
 using to the required algorithm
 """
 
-# from Algorithms.lzw import LZW
 from image_data import work_with_image
 from video_data import work_with_video
 from audio_data import work_with_audio

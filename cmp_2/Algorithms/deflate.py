@@ -5,7 +5,6 @@ from Algorithms.huffman1 import HuffmanTree
 class Deflate:
     """Class for Deflate algorithm"""
     def __init__(self):
-        # self.data = data
         self.lz77 = LZ77()
         self.huf = None
 
@@ -26,7 +25,3 @@ class Deflate:
         self.lz77.data = decoded_data
         decompressed_data = self.lz77.decode(decoded_data)
         return decompressed_data
-
-# a = Deflate()
-# com = a.encode('asasasasyuhijoka')
-# dec = a.decode(com)

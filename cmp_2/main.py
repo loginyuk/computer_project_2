@@ -1,7 +1,7 @@
+import os
 from flask import *
 from fileinput import filename
 from compressor import compress
-import os
 
 compressor = Flask(__name__)
 
@@ -11,17 +11,22 @@ options_list= [{'algorithm' : 'LZW'}, {'algorithm' : 'LZ77'}, {'algorithm' : 'Hu
 
 @compressor.route('/')
 def main():
+    """
+    Main page
+    """
     global options_list
     return render_template('main.html', options=options_list)
 
 @compressor.route('/', methods = ['POST'])
 def submit():
+    """
+    Submit page
+    """
     global path
     global options_list
     if request.method == 'POST':  
         f = request.files['file']
         alg = list(request.form.values())
-
 
         output_folder = 'files'
         for filename in os.listdir(output_folder):

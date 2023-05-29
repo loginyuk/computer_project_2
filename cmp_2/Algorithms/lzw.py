@@ -45,9 +45,3 @@ class LZW:
             dict_size += 1
             text = entry
         return result.getvalue()
-
-# if __name__ == '__main__':
-#     compress = LZW().encode('TOBEORNOTTOBEORTOBEORNOT')
-#     print(compress)
-#     decompress = LZW().decode(compress)
-#     print(decompress)

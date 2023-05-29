@@ -1,6 +1,10 @@
 from algorithms import work_with_algo
 
 def work_with_txt(path, algorithm):
+    """
+    Works with txt file
+    Read and write txt file
+    """
     string = ''
     with open(path, encoding="UTF-8") as file:
         data = file.read()

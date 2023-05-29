@@ -27,7 +27,6 @@ class LZ77:
         return (length, (offset, length, next))
 
 
-
     def encode(self, data):
         """
         Compress the data.
@@ -60,10 +59,3 @@ class LZ77:
             if len(buffer) > self.buffer_length:
                 buffer = buffer[len(buffer) - self.buffer_length:]
         return ans
-
-# lz = LZ77()
-# with open('delete', 'r') as file:
-#     a = file.read()
-# encoded = lz.encode(a)
-# decoded = lz.decode(encoded)
-# print(decoded == a)
