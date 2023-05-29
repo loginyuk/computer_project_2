@@ -70,6 +70,21 @@ def work_with_video(path, algorithm):
     for i in range(len(os.listdir(data_from_video[1]))):
         statistics_frames += work_with_image(f'files/frames/frame_{i}.jpg', algorithm)
 
+    # [compression_ratio, compress_time, decompress_time]
+
+    statistics_photo = [statistics_frames[0]]
+    for i in statistics_frames:
+        statistics_photo[1] += i[0]
+        statistics_photo[2] += i[1]
+        statistics_photo[3] += i[2]
+    for i in statistics_photo:
+        statistics_photo[i] /= len(statistics_frames)
+    
+    statistics = [statistics_photo[0] + statistics_audio[0], statistics_photo[1] + statistics_audio[1], statistics_photo[2] + statistics_audio[2]]
+
+
+
+
     video_back(data_from_video[2], data_from_video[3], data_from_video[4], path)
     output_folder = 'files/frames'
     if not os.path.exists(output_folder):
@@ -81,7 +96,7 @@ def work_with_video(path, algorithm):
             # Remove the file
             os.remove(file_path)
     os.rmdir(output_folder)
-    return [statistics_audio, statistics_frames]
+    return statistics
 
 
 

@@ -37,7 +37,7 @@ def submit():
         a = 'files/' + f.filename
         f.save(a)
         path, statistics = compress(a, alg[0])
-        # if len(statistics) == 2 то це відео(1 аудіо, 2 фотки)
+
         return render_template('download.html', options=options_list)
 
 @compressor.route('/download')

@@ -14,7 +14,7 @@ class LZ77:
         """
         length = 0
         offset = 0
-        while True:
+        while length < len(data):
             it = buffer.find(data[:length + 1])
             if it != -1:
                 offset = len(buffer[it:])
@@ -25,6 +25,8 @@ class LZ77:
             break
         next = data[length]
         return (length, (offset, length, next))
+
+
 
     def encode(self, data):
         """
@@ -49,7 +51,7 @@ class LZ77:
         buffer = ""
         ans = ""
         for (offset, length, next) in data:
-            if next == None:
+            if next is None:
                 ans += buffer[len(buffer) - offset:len(buffer) - offset + length]
                 break
             added = buffer[len(buffer) - offset:len(buffer) - offset + length] + next
@@ -60,7 +62,8 @@ class LZ77:
         return ans
 
 # lz = LZ77()
-# encoded = lz.encode('adghjgvgvm')
-# print(encoded)
+# with open('delete', 'r') as file:
+#     a = file.read()
+# encoded = lz.encode(a)
 # decoded = lz.decode(encoded)
-# print(decoded)
+# print(decoded == a)
