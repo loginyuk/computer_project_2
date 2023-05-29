@@ -7,7 +7,7 @@ from Algorithms.lzw import LZW
 from Algorithms.lz77 import LZ77
 from Algorithms.huffman import huffman_statistic
 from Algorithms.deflate import Deflate
-from Algorithms.LZSS_щдв import LZSS
+from Algorithms.LZSS import LZSS
 from Algorithms.compression_statistics import get_compression_statistics
 def lzw_handler(data):
     """
