@@ -53,10 +53,23 @@ def deflate_handler(data):
     """
     Deflate algorithm handler
     """
-    statistics = []
-    statistics, decompressed = get_compression_statistics(Deflate(), data)
-    assert decompressed == data
-    return decompressed, statistics
+    deflate = Deflate()
+
+    # Стиснення
+    start_time = time.time()
+    compressed_data = deflate.encode(data)
+    compression_time = time.time() - start_time
+
+    # Розтиснення
+    start_time = time.time()
+    decompressed_data = deflate.decode(compressed_data)
+    decompression_time = time.time() - start_time
+
+    # Відсоток стиснення
+    compression_ratio = (1 - (len(compressed_data) / len(data))) * 100
+
+    assert decompressed_data == data
+    return decompressed_data, (compression_ratio, compression_time, decompression_time)
 
 def lzss_handler(data):
     """
