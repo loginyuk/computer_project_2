@@ -1,95 +1,152 @@
-"""LZSS_algo"""
-
+from struct import Struct
+import time
 class LZSS:
-    """class LZSS"""
-    def __init__(self, window_size=10, lookahead_buffer_size=5):
-        """
-        Ініціалізує об'єкт алгоритму LZSS з заданим розміром вікна і буфера вигляду.
+    """
+    Клас, що реалізує алгоритм LZSS для стиснення та розпакування даних.
+    """
 
-        Параметри:
-        - window_size (int): Розмір вікна, в якому шукається відповідна підстрока.
-        - lookahead_buffer_size (int): Розмір буфера вигляду, що визначає 
-        максимальну довжину відповідної підстроки.
-
-        """
-        self.window_size = window_size
-        self.lookahead_buffer_size = lookahead_buffer_size
-
-    def encode(self, data):
-        """
-        Стискає вхідні дані за допомогою алгоритму LZSS.
-
-        Параметри:
-        - data (str): Рядок, що містить вхідні дані для стиснення.
-
-        Повертає:
-        compressed_data (list): Список стиснутих токенів, кожен з яких
-        представляється кортежем (довжина, зміщення).
-        """
-        compressed_data = []
-        i = 0
-        while i < len(data):
-            match_length, match_offset = self.find_longest_match(data, i)
-            if match_length > 2:
-                compressed_data.append((match_length, match_offset))
-                i += match_length
-            else:
-                compressed_data.append((0, data[i]))
-                i += 1
-        return compressed_data
-
-    def find_longest_match(self, data, current_index):
-        """
-        Знаходить найдовшу відповідну підстроку в заданому вікні і буфері вигляду.
-
-        Параметри:
-        - data (str): Рядок, у якому шукається відповідна підстрока.
-        - current_index (int): Поточний індекс, з якого починається пошук підстроки.
-
-        Повертає:
-        (best_length, best_offset) (tuple): Кортеж, що містить найдовшу довжину і
-        зміщення знайденої підстроки.
-        """
-        end_index = min(current_index + self.lookahead_buffer_size, len(data))
-        best_length = 0
-        best_offset = 0
-
-        for offset in range(1, self.window_size + 1):
-            start_index = max(0, current_index - self.window_size)
-            substring = data[current_index:current_index + offset]
-
-            for j in range(start_index, current_index):
-                match_length = 0
-                while (
-                    current_index + match_length < end_index and
-                    data[j + match_length] == data[current_index + match_length]
-                ):
-                    match_length += 1
-
-                if match_length > best_length:
-                    best_length = match_length
-                    best_offset = current_index - j
-
-        return best_length, best_offset
+    def __init__(self):
+        pass
 
     def decode(self, compressed_data):
         """
-        Розкодовує стиснуті дані, відновлюючи вихідний рядок.
+        Розпаковує стислі дані, використовуючи алгоритм LZSS.
 
-        Параметри:
-        - compressed_data (list): Список стиснутих токенів, кожен з яких
-        представляється кортежем (довжина, зміщення).
-
-        Повертає:
-        decompressed_data (str): Розкодований рядок, відновлений зі стиснутих даних.
+        :param compressed_data: Стислі дані, що підлягають розпакуванню.
+        :return: Розпаковані дані.
         """
-        decompressed_data = []
-        for token in compressed_data:
-            length, offset = token
-            if length > 0:
-                start_index = len(decompressed_data) - offset
+        if not compressed_data[0]:
+            return compressed_data
+
+        uncompressed_size = (compressed_data[2] << 8) | compressed_data[1]
+        data_iterator = iter(compressed_data[3:])
+        control = 1
+        uncompressed_data = bytearray()
+
+        while len(uncompressed_data) < uncompressed_size:
+            if control == 1:
+                control = 0x10000 | next(data_iterator) | (next(data_iterator) << 8)
+
+            if control & 1:
+                pointer = next(data_iterator) | (next(data_iterator) << 8)
+                length = (pointer >> 11) + 3
+                pointer &= 0x7FF
+                pointer += 1
                 for i in range(length):
-                    decompressed_data.append(decompressed_data[start_index + i])
+                    uncompressed_data.append(uncompressed_data[-pointer])
             else:
-                decompressed_data.append(offset)
-        return "".join(map(str, decompressed_data))
+                uncompressed_data.append(next(data_iterator))
+
+            control >>= 1
+
+        return bytes(uncompressed_data)
+
+    def _search(self, data, position, size):
+        """
+        Внутрішня функція пошуку найкращого збігу підстроки у вхідних даних.
+
+        :param data: Вхідні дані.
+        :param position: Початкова позиція для пошуку.
+        :param size: Розмір вхідних даних.
+        :return: Позицію та довжину найкращого збігу підстроки.
+        """
+        max_length = min(0x22, size - position)
+        if max_length < 3:
+            return 0, 0
+
+        max_position = max(0, position - 0x800)
+        hit_position, hit_length = 0, 3
+
+        if max_position < position:
+            substring_length = data[max_position : position + hit_length].find(data[position : position + hit_length])
+            while substring_length < (position - max_position):
+                while (hit_length < max_length) and (data[position + hit_length] == data[max_position + substring_length + hit_length]):
+                    hit_length += 1
+
+                max_position += substring_length
+                hit_position = max_position
+
+                if hit_length == max_length:
+                    return hit_position, hit_length
+
+                max_position += 1
+                hit_length += 1
+
+                if max_position >= position:
+                    break
+
+                substring_length = data[max_position : position + hit_length].find(data[position : position + hit_length])
+
+        if hit_length < 4:
+            hit_length = 1
+
+        return hit_position, hit_length - 1
+
+    def encode(self, data):
+        """
+        Стискає дані за допомогою алгоритму LZSS.
+
+        :param data: Вхідні дані, що підлягають стисканню.
+        :return: Стислі дані.
+        """
+        HW = Struct("<H")
+
+        max_length = 0x22
+        uncompressed_size = len(data)
+        compressed_data = bytearray(b'\x01')
+        compressed_data.extend(HW.pack(uncompressed_size))
+
+        control, commands = 0, 3
+        position, flag = 0, 1
+
+        compressed_data.append(0)
+        compressed_data.append(0)
+
+        while position < uncompressed_size:
+            hit_position, hit_length = self._search(data, position, uncompressed_size)
+
+            if hit_length < 3:
+                compressed_data.append(data[position])
+                position += 1
+            else:
+                next_hit_position, next_hit_length = self._search(data, position + 1, uncompressed_size)
+
+                if (hit_length + 1) < next_hit_length:
+                    compressed_data.append(data[position])
+                    position += 1
+                    flag <<= 1
+
+                    if flag & 0x10000:
+                        HW.pack_into(compressed_data, commands, control)
+                        control, flag = 0, 1
+                        commands = len(compressed_data)
+                        compressed_data.append(0)
+                        compressed_data.append(0)
+
+                    hit_length = next_hit_length
+                    hit_position = next_hit_position
+
+                control |= flag
+
+                encoded_value = position - hit_position - 1
+                position += hit_length
+                hit_length -= 3
+                encoded_value |= hit_length << 11
+
+                compressed_data.extend(HW.pack(encoded_value))
+
+            flag <<= 1
+
+            if flag & 0x10000:
+                HW.pack_into(compressed_data, commands, control)
+                control, flag = 0, 1
+                commands = len(compressed_data)
+                compressed_data.append(0)
+                compressed_data.append(0)
+
+        if flag == 1:
+            del compressed_data[-2:]
+        else:
+            HW.pack_into(compressed_data, commands, control)
+
+        return bytes(compressed_data)
