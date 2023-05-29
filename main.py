@@ -51,7 +51,7 @@ def submit():
         f.save(a)
         path, statistics = compress(a, alg[0])
 
-        return render_template('download.html', options=options_list)
+        return render_template('download.html', options=options_list, statistics=statistics)
 
 @compressor.route('/download')
 def download():
