@@ -118,4 +118,4 @@ def huffman_statistic(data):
     compression_time, encoded_data, huffman_tree = compression_time(data)
     compression_ratio = compression_ratio(data, encoded_data)
     decompression_time, decoded_data = decompression_time(encoded_data, huffman_tree)
-    return [compression_ratio, compression_time, decompression_time], decoded_data
+    return (compression_ratio, compression_time, decompression_time), decoded_data
