@@ -35,6 +35,14 @@ def submit():
             if os.path.isfile(file_path):
                 # Remove the file
                 os.remove(file_path)
+            else:
+                for another in os.listdir('files/frames'):
+                    file_path = os.path.join('files/frames', another)
+                    # Check if the file is a regular file (not a directory)
+                    if os.path.isfile(file_path):
+                        # Remove the file
+                        os.remove(file_path)
+                os.rmdir('files/frames')
         os.rmdir(output_folder)
         os.makedirs(output_folder)
     
@@ -52,4 +60,4 @@ def download():
 
 
 if __name__ == "__main__":
-    compressor.run()
+    compressor.run(debug=True)

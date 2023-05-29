@@ -65,15 +65,17 @@ def work_with_video(path, algorithm):
     data_from_video = video_to_string(path)
     statistics_audio = work_with_audio(data_from_video[0], algorithm)
     for i in range(len(os.listdir(data_from_video[1]))):
-        statistics_frames += work_with_image(f'files/frames/frame_{i}.jpg', algorithm)
-
-    statistics_photo = [statistics_frames[0]]
+        statistics_frames.append(work_with_image(f'files/frames/frame_{i}.jpg', algorithm))
+    # [[compression_ratio, compress_time, decompress_time], [], [], []]
+    
+    statistics_photo = list(statistics_frames[0])
+    print(statistics_photo)
     for i in statistics_frames:
-        statistics_photo[1] += i[0]
-        statistics_photo[2] += i[1]
-        statistics_photo[3] += i[2]
-    for i in statistics_photo:
-        statistics_photo[i] /= len(statistics_frames)
+        statistics_photo[0] += i[0]
+        statistics_photo[1] += i[1]
+        statistics_photo[2] += i[2]
+    for i, _ in enumerate(statistics_photo):
+        statistics_photo[i] = statistics_photo[i]/len(statistics_frames)
     statistics = [statistics_photo[0] + statistics_audio[0],\
             statistics_photo[1] + statistics_audio[1], statistics_photo[2] + statistics_audio[2]]
 
