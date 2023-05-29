@@ -31,7 +31,10 @@ def audio_string(path):
 
 
 def audio_back(decompressed, rate, lend, sep, bits, file_format, path):
-    np_array = np.array([int(float(num)) for num in decompressed.split(sep)]).reshape((lend, 2)).astype(bits)
+    if file_format == 'flac':
+        np_array = np.array([float(num) for num in decompressed.split(sep)]).reshape((lend, 2)).astype(bits)
+    else:
+        np_array = np.array([int(num) for num in decompressed.split(sep)]).reshape((lend, 2)).astype(bits)
     
     if file_format == 'mp3':
         write_mp3(path,rate,np_array)
@@ -71,8 +74,9 @@ def write_mp3(f, sr, x, normalized=False):
 
 def work_with_audio(path, algorithm):
     data_from_audio = audio_string(path)
-
+    # print('1')
     decompressed, statistics = work_with_algo(algorithm, data_from_audio[0])
+    # print('2')
 
     
 
